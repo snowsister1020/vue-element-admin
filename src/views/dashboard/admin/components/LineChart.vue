@@ -1,135 +1,78 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <el-table
+    :data="tableData"
+    style="width: 30%"
+  >
+    <el-table-column
+      type="index"
+      label="排名"
+      width="100"
+    />
+    <el-table-column
+      prop="name"
+      label="领域"
+      width="100"
+    />
+    <el-table-column
+      prop="address"
+      label="占比"
+    >
+      <template slot-scope="scope">
+        <el-progress :percentage="scope.row.address" />
+      </template>
+    </el-table-column>
+
+  </el-table>
 </template>
 
 <script>
-import echarts from 'echarts'
-require('echarts/theme/macarons') // echarts theme
-import resize from './mixins/resize'
-
 export default {
-  mixins: [resize],
-  props: {
-    className: {
-      type: String,
-      default: 'chart'
-    },
-    width: {
-      type: String,
-      default: '100%'
-    },
-    height: {
-      type: String,
-      default: '350px'
-    },
-    autoResize: {
-      type: Boolean,
-      default: true
-    },
-    chartData: {
-      type: Object,
-      required: true
-    }
-  },
   data() {
     return {
-      chart: null
-    }
-  },
-  watch: {
-    chartData: {
-      deep: true,
-      handler(val) {
-        this.setOptions(val)
+      tableData: [{
+        name: '应急救援',
+        address: 30
+      }, {
+        name: '应急救护',
+        address: 50
+      }, {
+        name: '人道救助',
+        address: 40
+      }, {
+        name: '造血干细胞捐献',
+        address: 70
+      }, {
+        name: '人体器官（遗体、组织）捐献',
+        address: 8
+      }, {
+        name: '无偿献血',
+        address: 78
+      }, {
+        name: '红十字文化传播',
+        address: 60
       }
+      ]
     }
   },
   mounted() {
-    this.$nextTick(() => {
-      this.initChart()
-    })
-  },
-  beforeDestroy() {
-    if (!this.chart) {
-      return
+    const compare = function(obj1, obj2) {
+      const var1 = obj1.address
+      const var2 = obj2.address
+      if (var2 < var1) {
+        return -1
+      } else if (var2 > var1) {
+        return 1
+      } else {
+        return 0
+      }
     }
-    this.chart.dispose()
-    this.chart = null
+    this.tableData.sort(compare)
   },
   methods: {
-    initChart() {
-      this.chart = echarts.init(this.$el, 'macarons')
-      this.setOptions(this.chartData)
-    },
-    setOptions({ expectedData, actualData } = {}) {
-      this.chart.setOption({
-        xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-          boundaryGap: false,
-          axisTick: {
-            show: false
-          }
-        },
-        grid: {
-          left: 10,
-          right: 10,
-          bottom: 20,
-          top: 30,
-          containLabel: true
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross'
-          },
-          padding: [5, 10]
-        },
-        yAxis: {
-          axisTick: {
-            show: false
-          }
-        },
-        legend: {
-          data: ['expected', 'actual']
-        },
-        series: [{
-          name: 'expected', itemStyle: {
-            normal: {
-              color: '#FF005A',
-              lineStyle: {
-                color: '#FF005A',
-                width: 2
-              }
-            }
-          },
-          smooth: true,
-          type: 'line',
-          data: expectedData,
-          animationDuration: 2800,
-          animationEasing: 'cubicInOut'
-        },
-        {
-          name: 'actual',
-          smooth: true,
-          type: 'line',
-          itemStyle: {
-            normal: {
-              color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2
-              },
-              areaStyle: {
-                color: '#f3f8ff'
-              }
-            }
-          },
-          data: actualData,
-          animationDuration: 2800,
-          animationEasing: 'quadraticOut'
-        }]
-      })
+    format(percentage) {
+      return percentage === 100 ? '满' : `${percentage}%`
     }
   }
+
 }
 </script>

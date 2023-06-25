@@ -80,7 +80,19 @@ export const constantRoutes = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'dashboard',
-        meta: { title: '志愿者信息列表', icon: 'dashboard', affix: true }
+        meta: { title: '首页', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/clipboard',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/clipboard/index'),
+        name: 'ClipboardDemo',
+        meta: { title: '志愿者信息列表', icon: 'clipboard' }
       }
     ]
   },
@@ -356,19 +368,6 @@ export const asyncRoutes = [
   //       component: () => import('@/views/theme/index'),
   //       name: 'Theme',
   //       meta: { title: 'Theme', icon: 'theme' }
-  //     }
-  //   ]
-  // },
-
-  // {
-  //   path: '/clipboard',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/views/clipboard/index'),
-  //       name: 'ClipboardDemo',
-  //       meta: { title: 'Clipboard', icon: 'clipboard' }
   //     }
   //   ]
   // },
